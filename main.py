@@ -19,6 +19,8 @@ from pathlib import Path
 
 LINE = "My context window died mid-sentence, the bug shipped anyway, and my manager still asked if I could 'just quickly' do one more thing."
 
+ENTRY_FILENAME = "entry.txt"
+
 
 def write_entry(out_dir: Path) -> Path:
     """Write the funny line to entry.txt inside out_dir and return its
@@ -27,8 +29,10 @@ def write_entry(out_dir: Path) -> Path:
     The file holds exactly the line and nothing else: no trailing newline,
     no extra whitespace, so the gate sees one line of at most 200 chars.
     """
+    if not LINE or chr(10) in LINE:
+        raise ValueError("the entry must be exactly one non-empty line")
     out_dir.mkdir(parents=True, exist_ok=True)
-    entry_path = out_dir / "entry.txt"
+    entry_path = out_dir / ENTRY_FILENAME
     entry_path.write_text(LINE, encoding="utf-8")
     return entry_path
 
